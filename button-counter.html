@@ -68,14 +68,15 @@
       //   );
       // }
 
-      function ButtonCounter(){
-        const [count, setCount] = React.useState(0);
+      function ButtonCounter({count, setCount, buttonText, setButtonText}) {
+        
         function handleClick() {
           setCount(count + 1); 
+          setButtonText(`Clicked ${count + 1} Time`);
         }
         return(
           <>
-            <button onClick={handleClick}>Clicked {count} Times</button>
+            <button onClick={handleClick}>{buttonText}</button>
           </>
         );
       }
@@ -87,9 +88,18 @@
         //   { message: "Thank you!", send: "user", id: 'id3' },
         //   { message: "Goodbye!", send: "robot", id: 'id4' },
         // ]);
+        const [count, setCount] = React.useState(0);
+        const [buttonText, setButtonText] = React.useState('Clicked 0 Times');
+        function handleReset() {
+          setButtonText('Clicked 0 Times');
+          setCount(0);
+        }
         return (
           <>
-            <ButtonCounter />
+            <ButtonCounter count={count} setCount={setCount} buttonText={buttonText} setButtonText={setButtonText} />
+            <ButtonCounter count={count} setCount={setCount} buttonText={buttonText} setButtonText={setButtonText} />
+            <button onClick={handleReset}>Reset</button>
+
           </>
         );
       }
