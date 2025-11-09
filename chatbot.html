@@ -16,19 +16,32 @@
       function ChatInput({chatMessages, setChatMessages}) {
 
         const [inputText, setInputText] = React.useState('');
+        const [isLoading, setIsLoading] = React.useState(false);
 
         function saveInputText(event){
           setInputText(event.target.value);
         }
 
         async function sendMessage() {
+          if (inputText.trim() === '' || isLoading) {
+            return;
+          }
+          setIsLoading(true);
+          setInputText('');
           setChatMessages([...chatMessages, { message: inputText, send: "user", id: 'id' + (chatMessages.length + 1) }]);
+          setChatMessages((chatMessages) => [
+              ...chatMessages,
+              { message: "Typing...", send: "robot", id: 'id' + (chatMessages.length + 1) }
+            ]);
           const response = await Chatbot.getResponseAsync(inputText);
+          setChatMessages((chatMessages) => 
+            chatMessages.filter(msg => msg.message !== "Typing...")
+          );
           setChatMessages((chatMessages) => [
               ...chatMessages,
               { message: response, send: "robot", id: 'id' + (chatMessages.length + 1) }
             ]);
-          setInputText('');
+          setIsLoading(false);
         }
 
         function handleKeyDown(event) {
